@@ -6,49 +6,35 @@ import CharComponent from './CharComponent/CharComponent';
 class App extends Component {
 
   state = {
-    inputText: '',
-    inputTextCharArray: []
+    inputText: ''
   }
 
   updateInputField = (event) => {
-    const charArray = event.target.value
-      .split('')
-      .map((char, index) => 
-      {
-        return {
-          id: index,
-          char: char
-        }})
-
     this.setState({
       inputText: event.target.value,
-      inputTextCharArray: charArray
     });
   }
 
-  removeCharFromInputText = (id) => {
-    const charIndex = this.state.inputTextCharArray.findIndex(p => p.id === id);
-    const charArray = [...this.state.inputTextCharArray];
-
-    charArray.splice(charIndex, 1);
-    const inputTextString = charArray.map(charObject => charObject.char).join("");
+  removeCharFromInputText = (index) => {
+    const charArray = this.state.inputText.split('');
+    charArray.splice(index, 1);
+    const updatedString = charArray.join('');
 
     this.setState({
-      inputText: inputTextString,
-      inputTextCharArray: charArray
+      inputText: updatedString
     });
   }
 
   render() {
     return (
       <div className="App">
-        <input type="text" onChange={(event) => this.updateInputField(event)} value={this.state.inputText}/>
+        <input type="text" onChange={this.updateInputField} value={this.state.inputText}/>
         <p>The length of the input text is {this.state.inputText.length}</p>
         <ValidationComponent textLength={this.state.inputText.length} />
         {
-          this.state.inputTextCharArray.map((charArray, index) => {
+          this.state.inputText.split('').map((char, index) => {
             return <CharComponent 
-              charProp={charArray.char}
+              charProp={char}
               key={index}
               clicked={() => this.removeCharFromInputText(index)}
               />
